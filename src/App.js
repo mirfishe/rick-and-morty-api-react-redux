@@ -1,34 +1,56 @@
 import React, {useState, useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import "bootstrap/dist/css/bootstrap.css";
 import "./App.css";
 import {Container, Col, Row, Navbar, NavbarBrand, NavbarToggler, Collapse, Nav, NavItem, NavLink, Jumbotron, TabContent, TabPane, Alert} from "reactstrap";
+import {loadArrayCharacters, loadArraySearchSpecies, loadArraySearchCharacterTypes} from "./components/characters/charactersSlice";
+// import {addSpecies} from "./components/characters/speciesSlice";
+// import {addCharacterTypes} from "./components/characters/characterTypesSlice";
+import {loadArrayLocations, loadArraySearchLocationTypes, loadArraySearchDimensions} from "./components/locations/locationsSlice";
+import {loadArrayEpisodes} from "./components/episodes/episodesSlice";
+import classnames from "classnames";
+import Characters from "./components/characters/Characters";
+import Locations from "./components/locations/Locations";
+import Episodes from "./components/episodes/Episodes";
 
 function App() {
 
   // const baseURL = "https://rickandmortyapi.com/api/";
-  const charactersURL = "https://rickandmortyapi.com/api/character/";
-  const locationsURL = "https://rickandmortyapi.com/api/location/";
-  const episodesURL = "https://rickandmortyapi.com/api/episode/";
-  const paginationURL = "?page="
+  // const charactersURL = "https://rickandmortyapi.com/api/character/";
+  // const locationsURL = "https://rickandmortyapi.com/api/location/";
+  // const episodesURL = "https://rickandmortyapi.com/api/episode/";
+  // const paginationURL = "?page="
+  const charactersURL = useSelector(state => state.characters.charactersURL);
+  const locationsURL = useSelector(state => state.locations.locationsURL);
+  const episodesURL = useSelector(state => state.episodes.episodesURL);
+  const paginationURL = useSelector(state => state.characters.paginationURL);
+
+  const dispatch = useDispatch();
 
   const [isOpen, setIsOpen] = useState(false);
-
+  const [activeTab, setActiveTab] = useState("0");
   const [errBuildCharacterLookups, setErrBuildCharacterLookups] = useState("");
   const [errBuildLocationLookups, setErrBuildLocationLookups] = useState("");
   const [errBuildEpisodeLookups, setErrBuildEpisodeLookups] = useState("");
 
   // Build lookup arrays
-  const [arrayCharacters, setArrayCharacters] = useState([]);
-  const [arrayLocations, setArrayLocations] = useState([]);
-  const [arrayEpisodes, setArrayEpisodes] = useState([]);
+  // const [arrayCharacters, setArrayCharacters] = useState([]);
+  // const [arrayLocations, setArrayLocations] = useState([]);
+  // const [arrayEpisodes, setArrayEpisodes] = useState([]);
 
-  const [arraySearchSpecies, setArraySearchSpecies] = useState([]);
-  const [arraySearchCharacterTypes, setArraySearchCharacterTypes] = useState([]);
-  const [arraySearchLocationTypes, setArraySearchLocationTypes] = useState([]);
-  const [arraySearchDimensions, setArraySearchDimensions] = useState([]);
+  // const [arraySearchSpecies, setArraySearchSpecies] = useState([]);
+  // const [arraySearchCharacterTypes, setArraySearchCharacterTypes] = useState([]);
+  // const [arraySearchLocationTypes, setArraySearchLocationTypes] = useState([]);
+  // const [arraySearchDimensions, setArraySearchDimensions] = useState([]);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const toggleTab = (tab) => {
+    if (activeTab !== tab) {
+      setActiveTab(tab);
+    };
   };
 
   const loadCharacterLookupArrays = () => {
@@ -39,7 +61,6 @@ function App() {
     let arrSearchSpecies = [];
     let arrSearchCharacterTypes = [];
   
-
     // Create characters URL of all possible character IDs?
     // Fetch that and read results
     // current total number of characters + to get the correct index value(?)
@@ -152,56 +173,294 @@ function App() {
         };
       });
 
+      // for (let i = 0; i < arrSearchSpecies.length; i++) {
+      //   // console.log("App.js loadCharacterLookupArrays arrSearchSpecies dispatch", arrSearchSpecies[i]);
+      //   dispatch(addSpecies(arrSearchSpecies[i]));
+      // };
+
+      // for (let i = 0; i < arrSearchCharacterTypes.length; i++) {
+      //   // console.log("App.js loadCharacterLookupArrays arrSearchCharacterTypes dispatch", arrSearchCharacterTypes[i]);
+      //   dispatch(addCharacterTypes(arrSearchCharacterTypes[i]));
+      // };
+
+      dispatch(loadArrayCharacters(arrCharacters));
+
+      dispatch(loadArraySearchSpecies(arrSearchSpecies));
+
+      dispatch(loadArraySearchCharacterTypes(arrSearchCharacterTypes));
+
+      // for (let i = 0; i < arrSearchSpecies.length; i++) {
+      //   console.log("App.js loadArraySearchSpecies arrSearchSpecies dispatch", arrSearchSpecies[i]);
+      //   dispatch(loadArraySearchSpecies(arrSearchSpecies[i]));
+      // };
+
+      // for (let i = 0; i < arrSearchCharacterTypes.length; i++) {
+      //   console.log("App.js loadArraySearchCharacterTypes arrSearchCharacterTypes dispatch", arrSearchCharacterTypes[i]);
+      //   dispatch(loadArraySearchCharacterTypes(arrSearchCharacterTypes[i]));
+      // };
+
       // View lookup arrays
-      // console.log("App.js loadAllLookupArrays arrCharacters", arrCharacters);
-      // console.log("App.js loadAllLookupArrays arrSearchSpecies", arrSearchSpecies);
-      // console.log("App.js loadAllLookupArrays arrSearchCharacterTypes", arrSearchCharacterTypes);
+      // console.log("App.js loadCharacterLookupArrays arrCharacters", arrCharacters);
+      // console.log("App.js loadCharacterLookupArrays arrSearchSpecies", arrSearchSpecies);
+      // console.log("App.js loadCharacterLookupArrays arrSearchCharacterTypes", arrSearchCharacterTypes);
 
     })
     .catch(err => {
-      console.log("App.js loadAllLookupArrays Character Lookups err", err);
+      console.log("App.js loadCharacterLookupArrays Character Lookups err", err);
       setErrBuildCharacterLookups(err);
     });
 
-
-    setArrayCharacters(arrCharacters);
+    // setArrayCharacters(arrCharacters);
   
-    setArraySearchSpecies(arrSearchSpecies);
-    setArraySearchCharacterTypes(arrSearchCharacterTypes);
+    // setArraySearchSpecies(arrSearchSpecies);
+    // setArraySearchCharacterTypes(arrSearchCharacterTypes);
+
+  };
+
+  const loadLocationLookupArrays = () => {
+
+    // Build lookup arrays
+    let arrLocations = [];
+
+    let arrSearchLocationTypes = [];
+    let arrSearchDimensions = [];
+
+    // Create locations URL of all possible location IDs?
+    // Fetch that and read results
+    // current total number of locations + to get the correct index value(?)
+    // used a number higher than the current total number of locations and it worked
+    let lastPageOfLocationResults;
+    let totalNumberOfLocations; // = 50 + 1; // Just over the hishest location id on 09/04/2020
+    let locationIDList = "";
+
+    fetch(locationsURL)
+    .then(result => {
+        // console.log(result);
+        return result.json();
+    })
+    .then(jsonData => {
+      // console.log(jsonData);
+      // Assumes that the highest character id = record count
+      // totalNumberOfLocations = jsonData.info.count; // + 1; to account for the index of the array starting at zero -- Not needed
+      // console.log("totalNumberOfLocations", totalNumberOfLocations);
+      lastPageOfLocationResults = locationsURL + paginationURL + jsonData.info.pages;
+      // console.log("lastPageOfLocationResults", lastPageOfLocationResults);
+
+      return fetch(lastPageOfLocationResults);
+    })
+    .then(result => {
+        // console.log(result);
+        return result.json();
+    })
+    .then(jsonData => {
+      // console.log(jsonData);
+      let results = jsonData.results;
+      // console.log(results);
+
+      // console.log("results.length", results.length);
+      totalNumberOfLocations = results[results.length - 1].id;
+      // console.log("totalNumberOfLocations", totalNumberOfLocations);
+
+      for (let i = 1; i < totalNumberOfLocations; i++) {
+        locationIDList += i;
+          if (i < totalNumberOfLocations - 1) {
+            locationIDList += ",";
+          };
+      };
+      
+      // console.log("locationIDList", locationIDList);
+      // console.log("locationsURL", locationsURL + locationIDList);
+
+      // From https://gomakethings.com/how-to-use-the-fetch-method-to-make-multiple-api-calls-with-vanilla-javascript/
+      return fetch(locationsURL + locationIDList);
+    })
+    .then(result => {
+        // console.log(result);
+        return result.json();
+    })
+    .then(jsonData => {
+      // console.log(jsonData);
+      let results = jsonData;
+
+      // Build lookup arrays
+      for (let i = 0; i < results.length; i++) {
+        let arrIDs =  arrLocations.map((value)=>{ return value.id;});
+        if (arrIDs.indexOf(results[i].id) === -1) {
+          arrLocations.push({id: results[i].id, name: results[i].name, url: results[i].url});
+        };
+
+        if (results[i].type !== "") {
+          if (arrSearchLocationTypes.indexOf(results[i].type) === -1) {
+            arrSearchLocationTypes.push(results[i].type);
+          };
+        };
+        if (results[i].dimension !== "") {
+          if (arrSearchDimensions.indexOf(results[i].dimension) === -1) {
+            arrSearchDimensions.push(results[i].dimension);
+          };
+        };
+      };
+
+      // Sort the array
+      arrSearchLocationTypes.sort((a, b) => {
+        if (a > b) {
+            return 1;
+        } else {
+            return -1;
+        };
+      });
+
+      // Sort the array
+      arrSearchDimensions.sort((a, b) => {
+        if (a > b) {
+            return 1;
+        } else {
+            return -1;
+        };
+      });
+
+      dispatch(loadArrayLocations(arrLocations));
+
+      dispatch(loadArraySearchLocationTypes(arrSearchLocationTypes));
+
+      dispatch(loadArraySearchDimensions(arrSearchDimensions));
+
+    // View lookup arrays
+    // console.log("App.js loadLocationLookupArrays arrLocations", arrLocations);
+    // console.log("App.js loadLocationLookupArrays arrSearchLocationTypes", arrSearchLocationTypes);
+    // console.log("App.js loadLocationLookupArrays arrSearchDimensions", arrSearchDimensions);
+
+    })
+    .catch(err => {
+      console.log("App.js loadLocationLookupArrays Location Lookups err", err);
+      setErrBuildLocationLookups(err);
+    });
+
+    // setArrayLocations(arrLocations);
+  
+    // setArraySearchLocationTypes(arrSearchLocationTypes);
+    // setArraySearchDimensions(arrSearchDimensions);
+
+  };
+
+  const loadEpisodesLookupArrays = () => {
+
+    // Build lookup arrays
+    let arrEpisodes = [];
+
+    // Create episode URL of all possible episode IDs?
+    // Fetch that and read results
+    // current total number of episodes + to get the correct index value(?)
+    // used a number higher than the current total number of episodes and it worked
+    let lastPageOfEpisodeResults;
+    let totalNumberOfEpisodes; // = 50 + 1;// Just over the hishest episode id on 09/04/2020
+    let episodeIDList = "";
+
+    fetch(episodesURL)
+    .then(result => {
+        // console.log(result);
+        return result.json();
+    })
+    .then(jsonData => {
+      // console.log(jsonData);
+      // Assumes that the highest character id = record count
+      // totalNumberOfEpisodes = jsonData.info.count; // + 1; to account for the index of the array starting at zero -- Not needed
+      // console.log("totalNumberOfEpisodes", totalNumberOfEpisodes);
+      lastPageOfEpisodeResults = locationsURL + paginationURL + jsonData.info.pages;
+      // console.log("lastPageOfEpisodeResults", lastPageOfEpisodeResults);
+
+      return fetch(lastPageOfEpisodeResults);
+    })
+    .then(result => {
+        // console.log(result);
+        return result.json();
+    })
+    .then(jsonData => {
+      // console.log(jsonData);
+      let results = jsonData.results;
+      // console.log(results);
+
+      // console.log("results.length", results.length);
+      totalNumberOfEpisodes = results[results.length - 1].id;
+      // console.log("totalNumberOfEpisodes", totalNumberOfEpisodes);
+
+      for (let i = 1; i < totalNumberOfEpisodes; i++) {
+        episodeIDList += i;
+          if (i < totalNumberOfEpisodes - 1) {
+            episodeIDList += ",";
+          };
+      };
+      
+      // console.log("episodeIDList", episodeIDList);
+      // console.log("episodesURL", episodesURL + episodeIDList);
+
+      // From https://gomakethings.com/how-to-use-the-fetch-method-to-make-multiple-api-calls-with-vanilla-javascript/
+      return fetch(episodesURL + episodeIDList);
+    })
+    .then(result => {
+        // console.log(result);
+        return result.json();
+    })
+    .then(jsonData => {
+      // console.log(jsonData);
+      let results = jsonData;
+
+      // Build lookup arrays
+      for (let i = 0; i < results.length; i++) {
+        let arrIDs =  arrEpisodes.map((value)=>{ return value.id;});
+        if (arrIDs.indexOf(results[i].id) === -1) {
+          arrEpisodes.push({id: results[i].id, name: results[i].name, url: results[i].url});
+        };
+      };
+
+      dispatch(loadArrayEpisodes(arrEpisodes));
+
+      // View lookup arrays
+      // console.log("App.js loadEpisodesLookupArrays arrEpisodes", arrEpisodes);
+
+    })
+    .catch(err => {
+        console.log("App.js loadEpisodesLookupArrays Episode Lookups err", err);
+        setErrBuildEpisodeLookups(err);
+    });
+
+    // setArrayEpisodes(arrEpisodes);
 
   };
 
   useEffect(() => {
     loadCharacterLookupArrays();
+    loadLocationLookupArrays();
+    loadEpisodesLookupArrays();
   }, []);
 
-  useEffect(() => {
-    console.log("App.js useEffect arrayCharacters", arrayCharacters);
-  }, [arrayCharacters]);
+  // useEffect(() => {
+  //   // console.log("App.js useEffect arrayCharacters", arrayCharacters);
+  // }, [arrayCharacters]);
 
-  useEffect(() => {
-    console.log("App.js useEffect arrayLocations", arrayLocations);
-  }, [arrayLocations]);
+  // useEffect(() => {
+  //   // console.log("App.js useEffect arrayLocations", arrayLocations);
+  // }, [arrayLocations]);
 
-  useEffect(() => {
-    console.log("App.js useEffect arrayEpisodes", arrayEpisodes);
-  }, [arrayEpisodes]);
+  // useEffect(() => {
+  //   // console.log("App.js useEffect arrayEpisodes", arrayEpisodes);
+  // }, [arrayEpisodes]);
   
-  useEffect(() => {
-    console.log("App.js useEffect arraySearchSpecies", arraySearchSpecies);
-  }, [arraySearchSpecies]);
+  // useEffect(() => {
+  //   console.log("App.js useEffect arraySearchSpecies", arraySearchSpecies);
+  // }, [arraySearchSpecies]);
   
-  useEffect(() => {
-    console.log("App.js useEffect arraySearchCharacterTypes", arraySearchCharacterTypes);
-  }, [arraySearchCharacterTypes]);
+  // useEffect(() => {
+  //   // console.log("App.js useEffect arraySearchCharacterTypes", arraySearchCharacterTypes);
+  // }, [arraySearchCharacterTypes]);
   
-  useEffect(() => {
-    console.log("App.js useEffect arraySearchLocationTypes", arraySearchLocationTypes);
-  }, [arraySearchLocationTypes]);
+  // useEffect(() => {
+  //   // console.log("App.js useEffect arraySearchLocationTypes", arraySearchLocationTypes);
+  // }, [arraySearchLocationTypes]);
   
-  useEffect(() => {
-    console.log("App.js useEffect arraySearchDimensions", arraySearchDimensions);
-  }, [arraySearchDimensions]);
+  // useEffect(() => {
+  //   // console.log("App.js useEffect arraySearchDimensions", arraySearchDimensions);
+  // }, [arraySearchDimensions]);
 
 
   return (
@@ -235,6 +494,44 @@ function App() {
     {errBuildLocationLookups !== "" ? <Alert color="danger">{errBuildLocationLookups}</Alert> : null}
     {errBuildEpisodeLookups !== "" ? <Alert color="danger">{errBuildEpisodeLookups}</Alert> : null}
 
+    <Nav tabs className="m-2">
+      <NavItem>
+        <NavLink className={classnames({active: activeTab === "1"})} onClick={() => {toggleTab("1");}}>Search Characters</NavLink>
+      </NavItem>
+      <NavItem>
+        <NavLink className={classnames({active: activeTab === "2"})} onClick={() => {toggleTab("2");}}>Search Locations</NavLink>
+      </NavItem>
+      <NavItem>
+        <NavLink className={classnames({active: activeTab === "3"})} onClick={() => {toggleTab("3");}}>Search Episodes</NavLink>
+      </NavItem>
+    </Nav>
+    <TabContent activeTab={activeTab}>
+      <TabPane tabId="1">
+        <Row>
+          <Col sm="12">
+            <Characters />
+          </Col>
+        </Row>
+      </TabPane>
+      </TabContent>
+      <TabContent activeTab={activeTab}>
+      <TabPane tabId="2">
+        <Row>
+          <Col sm="12">
+            <Locations />
+          </Col>
+        </Row>
+      </TabPane>
+      </TabContent>
+      <TabContent activeTab={activeTab}>
+      <TabPane tabId="3">
+        <Row>
+          <Col sm="12">
+            <Episodes />
+          </Col>
+        </Row>
+      </TabPane>
+    </TabContent>
     </React.Fragment>
   );
 }
