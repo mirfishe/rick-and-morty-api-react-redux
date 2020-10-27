@@ -435,6 +435,7 @@ function App() {
   useEffect(() => {
     // Checking to see if the data has been loaded once this session so that the api data isn't reloaded with every page load
     // Not sure that this is even needed?
+    // Could check the length of the arrays in state?
     console.log("App.js useEffect arrayCharactersLoaded", arrayCharactersLoaded);
     if (!arrayCharactersLoaded) {
       loadCharacterLookupArrays();
