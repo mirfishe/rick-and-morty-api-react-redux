@@ -18,8 +18,11 @@ const initialState = {
   charactersURL: "https://rickandmortyapi.com/api/character/",
   paginationURL: "?page=",
   arrayCharacters: [],
+  arrayCharactersLoaded: false,
   arraySearchSpecies: [],
+  arraySearchSpeciesLoaded: false,
   arraySearchCharacterTypes: [],
+  arraySearchCharacterTypesLoaded: false,
   arraySearchGender: [ // "female", "male", "genderless", "unknown"
     // {female: "Female"},
     // {male: "Male"},
@@ -53,6 +56,9 @@ const charactersSlice = createSlice({
           // console.log("charactersSlice.js loadArrayCharacters action.payload[i]", action.payload[i]);
           state.arrayCharacters.push(action.payload[i]);
         };
+
+        state.arrayCharactersLoaded = true;
+
       }
     },
     loadArraySearchSpecies: {
@@ -64,6 +70,9 @@ const charactersSlice = createSlice({
             // console.log("charactersSlice.js loadArraySearchSpecies action.payload[i]", action.payload[i]);
             state.arraySearchSpecies.push(action.payload[i]);
           };
+
+          state.arraySearchSpeciesLoaded = true;
+
         }
       },
     loadArraySearchCharacterTypes: {
@@ -75,6 +84,9 @@ const charactersSlice = createSlice({
             // console.log("charactersSlice.js loadArraySearchCharacterTypes action.payload[i]", action.payload[i]);
             state.arraySearchCharacterTypes.push(action.payload[i]);
           };
+
+          state.arraySearchCharacterTypesLoaded = true;
+
         }
       }
   }

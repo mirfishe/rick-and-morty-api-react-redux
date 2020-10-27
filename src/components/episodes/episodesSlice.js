@@ -3,7 +3,8 @@ import {createSlice} from '@reduxjs/toolkit';
 const initialState = {
     episodesURL: "https://rickandmortyapi.com/api/episode/",
     paginationURL: "?page=",
-    arrayEpisodes: []
+    arrayEpisodes: [],
+    arrayEpisodesLoaded: false
 };
 
 const episodesSlice = createSlice({
@@ -19,6 +20,9 @@ const episodesSlice = createSlice({
           // console.log("episodesSlice.js loadArrayEpisodes action.payload[i]", action.payload[i]);
           state.arrayEpisodes.push(action.payload[i]);
         };
+
+        state.arrayEpisodesLoaded = true;
+
       }
     }
   }
