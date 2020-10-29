@@ -1,11 +1,11 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice} from "@reduxjs/toolkit";
 
 const initialState = [
 
 ];
 
 const characterTypesSlice = createSlice({
-  name: 'characterTypes',
+  name: "characterTypes",
   initialState,
   reducers: {
     addCharacterTypes: {

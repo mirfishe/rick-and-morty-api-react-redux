@@ -25,6 +25,10 @@ function App() {
   const episodesURL = useSelector(state => state.episodes.episodesURL);
   const paginationURL = useSelector(state => state.characters.paginationURL);
 
+  const arrayCharactersLoaded = useSelector(state => state.characters.arrayCharactersLoaded);
+  const arrayLocationsLoaded = useSelector(state => state.locations.arrayLocationsLoaded);
+  const arrayEpisodesLoaded = useSelector(state => state.episodes.arrayEpisodesLoaded);
+
   const dispatch = useDispatch();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -429,9 +433,24 @@ function App() {
   };
 
   useEffect(() => {
-    loadCharacterLookupArrays();
-    loadLocationLookupArrays();
-    loadEpisodesLookupArrays();
+    // Checking to see if the data has been loaded once this session so that the api data isn't reloaded with every page load
+    // Not sure that this is even needed?
+    // Could check the length of the arrays in state?
+    console.log("App.js useEffect arrayCharactersLoaded", arrayCharactersLoaded);
+    if (!arrayCharactersLoaded) {
+      loadCharacterLookupArrays();
+    };
+
+    console.log("App.js useEffect arrayLocationsLoaded", arrayLocationsLoaded);
+    if (!arrayLocationsLoaded) {
+      loadLocationLookupArrays();
+    };
+
+    console.log("App.js useEffect arrayEpisodesLoaded", arrayEpisodesLoaded);
+    if (!arrayEpisodesLoaded) {
+      loadEpisodesLookupArrays();
+    };
+
   }, []);
 
   // useEffect(() => {

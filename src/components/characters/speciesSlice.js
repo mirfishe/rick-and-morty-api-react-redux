@@ -1,11 +1,11 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice} from "@reduxjs/toolkit";
 
 const initialState = [
 
 ];
 
 const speciesSlice = createSlice({
-  name: 'species',
+  name: "species",
   initialState,
   reducers: {
     addSpecies: {
