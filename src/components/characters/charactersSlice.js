@@ -1,4 +1,4 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice} from "@reduxjs/toolkit";
 
 // const arraySearchSpecies = [];
 // const arraySearchCharacterTypes = [];
@@ -44,7 +44,7 @@ const initialState = {
 };
 
 const charactersSlice = createSlice({
-  name: 'characters',
+  name: "characters",
   initialState,
   reducers: {
     loadArrayCharacters: {

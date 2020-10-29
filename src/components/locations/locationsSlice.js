@@ -1,4 +1,4 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice} from "@reduxjs/toolkit";
 
 const initialState = {
     locationsURL: "https://rickandmortyapi.com/api/location/",
@@ -12,7 +12,7 @@ const initialState = {
 };
 
 const locationsSlice = createSlice({
-  name: 'locations',
+  name: "locations",
   initialState,
   reducers: {
     loadArrayLocations: {
